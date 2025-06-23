@@ -1,0 +1,16 @@
+.button {
+  border-radius: 6px;
+  padding: 8px 30px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.25s;
+  font-size: 16px;
+  border: none;
+}
+.accent {
+  background-color: #312eb5;
+  border-radius: 6px;
+}
+.accent:hover {
+  background-color: #222096;
+}
