@@ -1,16 +1,34 @@
 import s from "./JournalForm.module.css";
 import { Button } from "../Button/Button";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import cn from "classnames";
 import { formReducer, INITIAL_STATE } from "./JournalForm.state.js";
 
 export const JournalForm = ({ onSubmit }) => {
   const [formState, dispatchForm] = useReducer(formReducer, INITIAL_STATE);
   const { isValid, isFormReadyToSubmit, values } = formState;
+  const titleRef = useRef();
+  const dateRef = useRef();
+  const textRef = useRef();
+
+  const focusError = (isValid) => {
+    switch (true) {
+      case !isValid.title:
+        titleRef.current.focus();
+        break;
+      case !isValid.date:
+        dateRef.current.focus();
+        break;
+      case !isValid.text:
+        textRef.current.focus();
+        break;
+    }
+  };
 
   useEffect(() => {
     let timerId;
     if (!isValid.date || !isValid.text || !isValid.title) {
+      focusError(isValid);
       timerId = setTimeout(() => {
         dispatchForm({ type: "RESET_VALIDATY" });
       }, 2000);
@@ -25,7 +43,7 @@ export const JournalForm = ({ onSubmit }) => {
       onSubmit(values);
       dispatchForm({ type: "CLEAR" });
     }
-  }, [isFormReadyToSubmit]);
+  }, [isFormReadyToSubmit, onSubmit, values]);
 
   const onChange = (e) => {
     dispatchForm({
@@ -36,7 +54,7 @@ export const JournalForm = ({ onSubmit }) => {
 
   const addJournalItem = (event) => {
     event.preventDefault();
-    dispatchForm({ type: "SUBMIT"});
+    dispatchForm({ type: "SUBMIT" });
   };
 
   return (
@@ -51,6 +69,7 @@ export const JournalForm = ({ onSubmit }) => {
           placeholder="Введите текст..."
           value={values.title}
           onChange={onChange}
+          ref={titleRef}
         />
       </div>
       <div className={s["form-row"]}>
@@ -67,6 +86,7 @@ export const JournalForm = ({ onSubmit }) => {
           })}
           value={values.date}
           onChange={onChange}
+          ref={dateRef}
         />
       </div>
       <div className={s["form-row"]}>
@@ -93,6 +113,7 @@ export const JournalForm = ({ onSubmit }) => {
         })}
         value={values.text}
         onChange={onChange}
+        ref={textRef}
       ></textarea>
       <Button text={"Сохранить"} />
     </form>

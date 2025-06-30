@@ -25,7 +25,11 @@ export const formReducer = (state, action) => {
       };
     }
     case "CLEAR": {
-      return { ...state, values: INITIAL_STATE.values };
+      return {
+        ...state,
+        values: INITIAL_STATE.values,
+        isFormReadyToSubmit: false,
+      };
     }
     case "RESET_VALIDATY": {
       return { ...state, isValid: INITIAL_STATE.isValid };
