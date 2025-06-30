@@ -14,12 +14,20 @@ function App() {
 
   useEffect(() => {
     if (data) {
-      setItems(data.map(item => ({
-        ...item,
-        date: new Date(item.date)
-      })));
+      setItems(
+        data.map((item) => ({
+          ...item,
+          date: new Date(item.date),
+        }))
+      );
     }
   }, []);
+
+  useEffect(() => {
+    if (items.length) {
+      localStorage.setItem("data", JSON.stringify(items));
+    }
+  }, [items]);
 
   const changeDataHandler = (inputData) => {
     const newData = {
@@ -41,7 +49,7 @@ function App() {
         </aside>
       </LeftPanel>
       <Body>
-        <JournalForm changeData={changeDataHandler} />
+        <JournalForm onSubmit={changeDataHandler} />
       </Body>
     </div>
   );

@@ -1,48 +1,42 @@
 import s from "./JournalForm.module.css";
 import { Button } from "../Button/Button";
-import { useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import cn from "classnames";
+import { formReducer, INITIAL_STATE } from "./JournalForm.state.js";
 
-export const JournalForm = ({ changeData }) => {
-  const [formValidState, setFormValidState] = useState({
-    title: true,
-    text: true,
-    date: true,
-  });
+export const JournalForm = ({ onSubmit }) => {
+  const [formState, dispatchForm] = useReducer(formReducer, INITIAL_STATE);
+  const { isValid, isFormReadyToSubmit, values } = formState;
+
+  useEffect(() => {
+    let timerId;
+    if (!isValid.date || !isValid.text || !isValid.title) {
+      timerId = setTimeout(() => {
+        dispatchForm({ type: "RESET_VALIDATY" });
+      }, 2000);
+    }
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [isValid]);
+
+  useEffect(() => {
+    if (isFormReadyToSubmit) {
+      onSubmit(values);
+      dispatchForm({ type: "CLEAR" });
+    }
+  }, [isFormReadyToSubmit]);
+
+  const onChange = (e) => {
+    dispatchForm({
+      type: "SET_VALUE",
+      payload: { [e.target.name]: e.target.value },
+    });
+  };
 
   const addJournalItem = (event) => {
     event.preventDefault();
-    const formProps = Object.fromEntries(new FormData(event.target));
-    let isFormValid = true;
-
-    if (!formProps?.title?.trim().length) {
-      setFormValidState((state) => ({ ...state, title: false }));
-      isFormValid = false;
-    } else {
-      setFormValidState((state) => ({ ...state, title: true }));
-      isFormValid = true;
-    }
-
-    if (!formProps.date) {
-      setFormValidState((state) => ({ ...state, date: false }));
-      isFormValid = false;
-    } else {
-      setFormValidState((state) => ({ ...state, date: true }));
-      isFormValid = true;
-    }
-
-    if (!formProps?.text?.trim().length) {
-      setFormValidState((state) => ({ ...state, text: false }));
-      isFormValid = false;
-    } else {
-      setFormValidState((state) => ({ ...state, text: true }));
-      isFormValid = true;
-    }
-
-    if (!isFormValid) {
-      return;
-    }
-    changeData(formProps);
+    dispatchForm({ type: "SUBMIT"});
   };
 
   return (
@@ -52,9 +46,11 @@ export const JournalForm = ({ changeData }) => {
           type="text"
           name="title"
           className={cn(s["input-title"], {
-            [s["invalid"]]: !formValidState.title,
+            [s["invalid"]]: !isValid.title,
           })}
           placeholder="Введите текст..."
+          value={values.title}
+          onChange={onChange}
         />
       </div>
       <div className={s["form-row"]}>
@@ -67,8 +63,10 @@ export const JournalForm = ({ changeData }) => {
           name="date"
           id="date"
           className={cn(s["input"], {
-            [s["invalid"]]: !formValidState.date,
+            [s["invalid"]]: !isValid.date,
           })}
+          value={values.date}
+          onChange={onChange}
         />
       </div>
       <div className={s["form-row"]}>
@@ -76,7 +74,14 @@ export const JournalForm = ({ changeData }) => {
           <img src="../src/assets/folder.svg" alt="folder icon" />
           <span>Метки</span>
         </label>
-        <input type="text" name="tag" id="tag" className={s["input"]} />
+        <input
+          type="text"
+          name="tag"
+          id="tag"
+          className={s["input"]}
+          value={values.tag}
+          onChange={onChange}
+        />
       </div>
       <textarea
         name="text"
@@ -84,8 +89,10 @@ export const JournalForm = ({ changeData }) => {
         cols="30"
         rows={10}
         className={cn(s["input"], {
-          [s["invalid"]]: !formValidState.text,
+          [s["invalid"]]: !isValid.text,
         })}
+        value={values.text}
+        onChange={onChange}
       ></textarea>
       <Button text={"Сохранить"} />
     </form>
