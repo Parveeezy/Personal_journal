@@ -5,26 +5,21 @@ import { JournalList } from "./components/JournalList/JournalList";
 import { Body } from "./layout/Body/Body";
 import { LeftPanel } from "./layout/LeftPanel/LeftPanel";
 import { JournalForm } from "./components/JournalForm/JournalForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 } from "uuid";
 
-const INITIAL_DATA = [
-  {
-    title: "Поход в Горы",
-    text: "Горные походы открывают удивительные природные ландшафты",
-    date: new Date(),
-    id: v4(),
-  },
-  {
-    title: "Подготовка к обновлению курсов",
-    text: "Как всё было классно",
-    date: new Date(),
-    id: v4(),
-  },
-];
-
 function App() {
-  const [items, setItems] = useState(INITIAL_DATA);
+  const [items, setItems] = useState([]);
+  const data = JSON.parse(localStorage.getItem("data"));
+
+  useEffect(() => {
+    if (data) {
+      setItems(data.map(item => ({
+        ...item,
+        date: new Date(item.date)
+      })));
+    }
+  }, []);
 
   const changeDataHandler = (inputData) => {
     const newData = {

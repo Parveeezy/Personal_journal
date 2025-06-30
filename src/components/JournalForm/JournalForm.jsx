@@ -58,7 +58,7 @@ export const JournalForm = ({ changeData }) => {
         />
       </div>
       <div className={s["form-row"]}>
-        <label for="date" className={s["form-label"]}>
+        <label htmlFor="date" className={s["form-label"]}>
           <img src="../src/assets/calendar.svg" alt="calendar" />
           <span>Дата</span>
         </label>
@@ -72,7 +72,7 @@ export const JournalForm = ({ changeData }) => {
         />
       </div>
       <div className={s["form-row"]}>
-        <label for="tag" className={s["form-label"]}>
+        <label htmlFor="tag" className={s["form-label"]}>
           <img src="../src/assets/folder.svg" alt="folder icon" />
           <span>Метки</span>
         </label>
