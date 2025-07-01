@@ -5,38 +5,30 @@ import { JournalList } from "./components/JournalList/JournalList";
 import { Body } from "./layout/Body/Body";
 import { LeftPanel } from "./layout/LeftPanel/LeftPanel";
 import { JournalForm } from "./components/JournalForm/JournalForm";
-import { useEffect, useState } from "react";
 import { v4 } from "uuid";
+import { useLocalStorage } from "./hooks/use-localstorage.hook";
 
 function App() {
-  const [items, setItems] = useState([]);
-  const data = JSON.parse(localStorage.getItem("data"));
+  const [items, setItems] = useLocalStorage("data");
 
-  useEffect(() => {
-    if (data) {
-      setItems(
-        data.map((item) => ({
-          ...item,
-          date: new Date(item.date),
-        }))
-      );
+  const mapItems = (items) => {
+    if (!items) {
+      return [];
     }
-  }, []);
+    return items.map((i) => ({
+      ...i,
+      date: new Date(i.date),
+    }));
+  };
 
-  useEffect(() => {
-    if (items.length) {
-      localStorage.setItem("data", JSON.stringify(items));
-    }
-  }, [items]);
-
-  const changeDataHandler = (inputData) => {
+  const changeDataHandler = (item) => {
     const newData = {
-      date: new Date(inputData.date),
-      title: inputData.title,
-      text: inputData.text,
+      date: new Date(item.date),
+      title: item.title,
+      text: item.text,
       id: v4(),
     };
-    setItems([...items, newData]);
+    setItems([...mapItems(items), newData]);
   };
 
   return (
@@ -45,7 +37,7 @@ function App() {
         <aside className="left-panel">
           <Header />
           <JournalAddButton />
-          <JournalList data={items} />
+          <JournalList data={mapItems(items)} />
         </aside>
       </LeftPanel>
       <Body>

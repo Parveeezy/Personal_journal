@@ -1,8 +1,9 @@
 import s from "./JournalForm.module.css";
 import { Button } from "../Button/Button";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import cn from "classnames";
 import { formReducer, INITIAL_STATE } from "./JournalForm.state.js";
+import { Input } from "../Input/Input.jsx";
 
 export const JournalForm = ({ onSubmit }) => {
   const [formState, dispatchForm] = useReducer(formReducer, INITIAL_STATE);
@@ -60,16 +61,15 @@ export const JournalForm = ({ onSubmit }) => {
   return (
     <form action="" className={s["journal-form"]} onSubmit={addJournalItem}>
       <div>
-        <input
+        <Input
           type="text"
           name="title"
-          className={cn(s["input-title"], {
-            [s["invalid"]]: !isValid.title,
-          })}
+          appearence="title"
           placeholder="Введите текст..."
           value={values.title}
           onChange={onChange}
           ref={titleRef}
+          isValid={isValid.title}
         />
       </div>
       <div className={s["form-row"]}>
@@ -77,13 +77,12 @@ export const JournalForm = ({ onSubmit }) => {
           <img src="../src/assets/calendar.svg" alt="calendar" />
           <span>Дата</span>
         </label>
-        <input
+        <Input
           type="date"
           name="date"
           id="date"
-          className={cn(s["input"], {
-            [s["invalid"]]: !isValid.date,
-          })}
+          appearence="date"
+          isValid={isValid.date}
           value={values.date}
           onChange={onChange}
           ref={dateRef}
@@ -94,13 +93,14 @@ export const JournalForm = ({ onSubmit }) => {
           <img src="../src/assets/folder.svg" alt="folder icon" />
           <span>Метки</span>
         </label>
-        <input
+        <Input
           type="text"
           name="tag"
           id="tag"
-          className={s["input"]}
+          appearence="tag"
           value={values.tag}
           onChange={onChange}
+          isValid={isValid.tag}
         />
       </div>
       <textarea
