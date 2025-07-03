@@ -7,6 +7,7 @@ import { LeftPanel } from "./layout/LeftPanel/LeftPanel";
 import { JournalForm } from "./components/JournalForm/JournalForm";
 import { v4 } from "uuid";
 import { useLocalStorage } from "./hooks/use-localstorage.hook";
+import { UserContextProvider } from "./context/user.context";
 
 function App() {
   const [items, setItems] = useLocalStorage("data");
@@ -23,27 +24,28 @@ function App() {
 
   const changeDataHandler = (item) => {
     const newData = {
+      ...item,
       date: new Date(item.date),
-      title: item.title,
-      text: item.text,
       id: v4(),
     };
     setItems([...mapItems(items), newData]);
   };
 
   return (
-    <div className="app">
-      <LeftPanel>
-        <aside className="left-panel">
-          <Header />
-          <JournalAddButton />
-          <JournalList data={mapItems(items)} />
-        </aside>
-      </LeftPanel>
-      <Body>
-        <JournalForm onSubmit={changeDataHandler} />
-      </Body>
-    </div>
+    <UserContextProvider>
+      <div className="app">
+        <LeftPanel>
+          <aside className="left-panel">
+            <Header />
+            <JournalAddButton />
+            <JournalList data={mapItems(items)} />
+          </aside>
+        </LeftPanel>
+        <Body>
+          <JournalForm onSubmit={changeDataHandler} />
+        </Body>
+      </div>
+    </UserContextProvider>
   );
 }
 

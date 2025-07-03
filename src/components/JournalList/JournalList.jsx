@@ -1,9 +1,15 @@
+import { useContext } from "react";
+import { UserContext } from "../../context/user.context";
 import CardButton from "../CardButton/CardButton";
 import { JournalItem } from "../JournalItem/JournalItem";
 import "./JournalList.css";
 
 export const JournalList = ({ data }) => {
-  const sortedData = [...data].sort((a, b) => b.date - a.date);
+  const { userId } = useContext(UserContext);
+
+  const sortedData = [...data]
+    .filter((i) => i.userId === userId)
+    .sort((a, b) => b.date - a.date);
 
   return (
     <div className="journal-list">
