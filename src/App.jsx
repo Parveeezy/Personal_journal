@@ -8,9 +8,11 @@ import { JournalForm } from "./components/JournalForm/JournalForm";
 import { v4 } from "uuid";
 import { useLocalStorage } from "./hooks/use-localstorage.hook";
 import { UserContextProvider } from "./context/user.context";
+import { useState } from "react";
 
 function App() {
   const [items, setItems] = useLocalStorage("data");
+  const [selectedItem, setSelectedItem] = useState({});
 
   const mapItems = (items) => {
     if (!items) {
@@ -28,7 +30,27 @@ function App() {
       date: new Date(item.date),
       id: v4(),
     };
-    setItems([...mapItems(items), newData]);
+
+    if (!item.id) {
+      setItems([...mapItems(items), newData]);
+    } else {
+      setItems([
+        ...mapItems(items).map((i) => {
+          if (i.id === item.id) {
+            return {
+              ...item,
+              date: new Date(item.date),
+            };
+          } else {
+            return i
+          }
+        }),
+      ]);
+    }
+  };
+
+  const clickedPostHandler = (item) => {
+    setSelectedItem(item);
   };
 
   return (
@@ -38,11 +60,11 @@ function App() {
           <aside className="left-panel">
             <Header />
             <JournalAddButton />
-            <JournalList data={mapItems(items)} />
+            <JournalList items={mapItems(items)} onClick={clickedPostHandler} />
           </aside>
         </LeftPanel>
         <Body>
-          <JournalForm onSubmit={changeDataHandler} />
+          <JournalForm onSubmit={changeDataHandler} data={selectedItem} />
         </Body>
       </div>
     </UserContextProvider>
