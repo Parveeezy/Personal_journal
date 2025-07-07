@@ -1,10 +1,12 @@
 import cn from "classnames";
 import { useContext, useEffect, useReducer, useRef } from "react";
+import deleteIcon from '../../../public/delete.svg'
 import { Button } from "../Button/Button";
 import { Input } from "../Input/Input.jsx";
 import s from "./JournalForm.module.css";
 import { formReducer, INITIAL_STATE } from "./JournalForm.state.js";
 import { UserContext } from "../../context/user.context.jsx";
+
 
 export const JournalForm = ({ data, onSubmit, deletePostItem }) => {
   const [formState, dispatchForm] = useReducer(formReducer, INITIAL_STATE);
@@ -100,7 +102,7 @@ export const JournalForm = ({ data, onSubmit, deletePostItem }) => {
             type="button"
             onClick={() => onDeletePostItemHandler(data.id)}
           >
-            <img src="src/assets/delete.svg" alt="delete" />
+            <img src={deleteIcon} alt="delete" />
           </button>
         )}
       </div>
