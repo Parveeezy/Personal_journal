@@ -1,6 +1,8 @@
 import cn from "classnames";
 import { useContext, useEffect, useReducer, useRef } from "react";
 import deleteIcon from '../../../public/delete.svg'
+import calendar from '../../../public/calendar.svg'
+import folderIcon from '../../../public/folder.svg'
 import { Button } from "../Button/Button";
 import { Input } from "../Input/Input.jsx";
 import s from "./JournalForm.module.css";
@@ -108,7 +110,7 @@ export const JournalForm = ({ data, onSubmit, deletePostItem }) => {
       </div>
       <div className={s["form-row"]}>
         <label htmlFor="date" className={s["form-label"]}>
-          <img src="../src/assets/calendar.svg" alt="calendar" />
+          <img src={calendar} alt="calendar" />
           <span>Дата</span>
         </label>
         <Input
@@ -126,7 +128,7 @@ export const JournalForm = ({ data, onSubmit, deletePostItem }) => {
       </div>
       <div className={s["form-row"]}>
         <label htmlFor="tag" className={s["form-label"]}>
-          <img src="../src/assets/folder.svg" alt="folder icon" />
+          <img src={folderIcon} alt="folder icon" />
           <span>Метки</span>
         </label>
         <Input
