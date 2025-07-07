@@ -12,7 +12,7 @@ import { useState } from "react";
 
 function App() {
   const [items, setItems] = useLocalStorage("data");
-  const [selectedItem, setSelectedItem] = useState({});
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const mapItems = (items) => {
     if (!items) {
@@ -42,7 +42,7 @@ function App() {
               date: new Date(item.date),
             };
           } else {
-            return i
+            return i;
           }
         }),
       ]);
@@ -53,18 +53,26 @@ function App() {
     setSelectedItem(item);
   };
 
+  const deletePostItem = (id) => {
+    setItems([...items.filter((el) => el.id !== id)]);
+  };
+
   return (
     <UserContextProvider>
       <div className="app">
         <LeftPanel>
           <aside className="left-panel">
             <Header />
-            <JournalAddButton />
+            <JournalAddButton clearForm={() => selectedItem(null)} />
             <JournalList items={mapItems(items)} onClick={clickedPostHandler} />
           </aside>
         </LeftPanel>
         <Body>
-          <JournalForm onSubmit={changeDataHandler} data={selectedItem} />
+          <JournalForm
+            onSubmit={changeDataHandler}
+            data={selectedItem}
+            deletePostItem={deletePostItem}
+          />
         </Body>
       </div>
     </UserContextProvider>

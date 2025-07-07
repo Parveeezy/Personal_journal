@@ -1,7 +1,22 @@
+.delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+}
+
+.delete:hover {
+  background: rgb(255, 255, 255, 0.10);
+}
+
 .journal-form {
   display: flex;
   flex-direction: column;
   gap: 30px;
+  width: 100%;
 }
 
 .form-row {
