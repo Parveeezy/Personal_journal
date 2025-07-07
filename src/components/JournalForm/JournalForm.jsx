@@ -100,7 +100,7 @@ export const JournalForm = ({ data, onSubmit, deletePostItem }) => {
             type="button"
             onClick={() => onDeletePostItemHandler(data.id)}
           >
-            <img src="../src/assets/delete.svg" alt="delete" />
+            <img src="src/assets/delete.svg" alt="delete" />
           </button>
         )}
       </div>
