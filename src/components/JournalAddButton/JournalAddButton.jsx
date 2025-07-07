@@ -1,6 +1,6 @@
 import CardButton from "../CardButton/CardButton";
 import "./JournalAddButton.css";
-import add from "../../../public/Add.svg";
+import add from "../../../public/add.svg";
 export const JournalAddButton = ({clearForm}) => {
   return (
     <CardButton className={"journal-add"} onClick={clearForm}>
